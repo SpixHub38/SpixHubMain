@@ -1,0 +1,128 @@
+-- Load Rayfield (Sirius version)
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Create the window
+local Window = Rayfield:CreateWindow({
+   Name = "Dig to the Earths Core",
+   Icon = 0,
+   LoadingTitle = "Spix Hub Suite",
+   LoadingSubtitle = "by Spix",
+   Theme = "Default",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "FarmConfig"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
+   },
+   KeySystem = false,
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+})
+
+-- Create main tab
+local Tab = Window:CreateTab("Auto Farm", 4483362458)
+
+-- Auto Dig
+local autoDig = false
+Tab:CreateToggle({
+   Name = "Auto Dig",
+   CurrentValue = false,
+   Callback = function(Value)
+      autoDig = Value
+      task.spawn(function()
+         while autoDig do
+            pcall(function()
+               local args = { [1] = "hello" }
+               local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+               if remotes and remotes:FindFirstChild("DigEvent") then
+                  remotes.DigEvent:FireServer(unpack(args))
+               end
+            end)
+            task.wait(0.1)
+         end
+      end)
+   end,
+})
+
+-- Auto Farm Gems
+local autoGem = false
+Tab:CreateToggle({
+   Name = "Auto Farm Gems",
+   CurrentValue = false,
+   Callback = function(Value)
+      autoGem = Value
+      task.spawn(function()
+         while autoGem do
+            pcall(function()
+               local args = { [1] = 9, [2] = "bye" }
+               local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+               if remotes and remotes:FindFirstChild("GemEvent") then
+                  remotes.GemEvent:FireServer(unpack(args))
+               end
+            end)
+            task.wait(0.1)
+         end
+      end)
+   end,
+})
+
+-- Auto Treasure Chest
+local autoChest = false
+Tab:CreateToggle({
+   Name = "Auto Treasure Chest",
+   CurrentValue = false,
+   Callback = function(Value)
+      autoChest = Value
+      task.spawn(function()
+         while autoChest do
+            pcall(function()
+               local args = { [1] = "Chest" }
+               local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+               if remotes and remotes:FindFirstChild("TreasureEvent") then
+                  remotes.TreasureEvent:FireServer(unpack(args))
+               end
+            end)
+            task.wait(0.1)
+         end
+      end)
+   end,
+})
+
+-- MISC Tab
+local MiscTab = Window:CreateTab("MISC", 4483362458)
+
+-- Anti-AFK
+MiscTab:CreateButton({
+   Name = "Anti-AFK",
+   Callback = function()
+      local vu = game:GetService("VirtualUser")
+      game:GetService("Players").LocalPlayer.Idled:Connect(function()
+         vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+         task.wait(1)
+         vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+      end)
+   end,
+})
+
+-- Full Bright
+MiscTab:CreateButton({
+   Name = "Full Bright",
+   Callback = function()
+      local lighting = game:GetService("Lighting")
+      lighting.Brightness = 10
+      lighting.ClockTime = 12
+      lighting.FogEnd = 100000
+      lighting.GlobalShadows = false
+   end,
+})
